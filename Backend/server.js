@@ -24,10 +24,11 @@ app.post('/login', async (req, res) => {
 });
 
 //Seccion 3 clase 6
-app.get('/verify', async(req, res) => {
+app.post('/verify', async(req, res) => {
     console.log('Verifing code');
-    const data = await twilio.verifyCodeAsync(process.env.MOBILE, req.query.code);
-    return data;
+    const {to, code} = req.body;
+    const data = await twilio.verifyCodeAsync(to, code);
+    res.send(data);
 });
 
 //Seccion 3 clase 6

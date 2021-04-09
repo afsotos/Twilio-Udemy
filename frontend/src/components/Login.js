@@ -1,14 +1,19 @@
 import React from 'react';
 import {Grid, Header, Segment, Form, Button} from 'semantic-ui-react';
 
-function Login({user:{username, mobileNumber, verificationCode, verificationSent}, setUser, sendSmsCode}) {
+function Login({
+    user:{ username, mobileNumber, verificationCode, verificationSent }, 
+    setUser, 
+    sendSmsCode,
+    sendVerificationCode,
+}) {
     function populateFilds(event, data){
         setUser((draft) => {
             draft[data.name] = data.value;
         });
     }
     return <Grid textAlign='center' verticalAlign='middle' style={{height: '100vh' }}>
-        <Grid.Column style={{maxWidht: 450 }}>
+        <Grid.Column style={{maxWidth: 450 }}>
             <Header as='h2' color="teal" textAlign='center'>
                 Login into Your Account:
             </Header>
@@ -43,8 +48,8 @@ function Login({user:{username, mobileNumber, verificationCode, verificationSent
                         name='verificationCode'
                         />
                     )}
-                    <Button color="teal" fluid size="large" onClick={sendSmsCode}>
-                        Login/Signup
+                    <Button color="teal" fluid size="large" onClick={!verificationSent ? sendSmsCode : sendVerificationCode}>
+                        {!verificationSent ? 'Login/Signup' : 'Enter your Code'}
                     </Button>
                 </Segment>
             </Form>
