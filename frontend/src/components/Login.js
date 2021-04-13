@@ -8,17 +8,17 @@ function Login({user:{username, mobileNumber, verificationCode, verificationSent
         });
     }
     return <Grid textAlign='center' verticalAlign='middle' style={{height: '100vh' }}>
-        <Grid.Column style={{maxWidht: 450 }}>
+        <Grid.Column style={{maxWidth: 450 }}>
             <Header as='h2' color="teal" textAlign='center'>
                 Login into Your Account:
             </Header>
-            <form>
+            <Form>
                 <Segment stacked>
                     <Form.Input 
                         fluid
                         icon='user'
                         iconPosition='left'
-                        placeHolder='UserName'
+                        placeholder='UserName'
                         value={username}
                         onChange={(event, data)=> populateFilds(event, data)}
                         name='username'
@@ -27,7 +27,7 @@ function Login({user:{username, mobileNumber, verificationCode, verificationSent
                         fluid
                         icon='mobile alternate'
                         iconPosition='left'
-                        placeHolder='Mobile Number'
+                        placeholder='Mobile Number'
                         value={mobileNumber}
                         onChange={(event, data)=> populateFilds(event, data)}
                         name='mobileNumber'
@@ -37,7 +37,7 @@ function Login({user:{username, mobileNumber, verificationCode, verificationSent
                         fluid
                         icon='key'
                         iconPosition='left'
-                        placeHolder='Enter your code'
+                        placeholder='Enter your code'
                         value={verificationCode}
                         onChange={(event, data) => populateFilds(event, data)}
                         name='verificationCode'
@@ -47,7 +47,7 @@ function Login({user:{username, mobileNumber, verificationCode, verificationSent
                         Login/Signup
                     </Button>
                 </Segment>
-            </form>
+            </Form>
         </Grid.Column>
     </Grid>;
     }
