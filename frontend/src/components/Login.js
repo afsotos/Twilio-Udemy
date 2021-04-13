@@ -1,7 +1,7 @@
 import React from 'react';
 import {Grid, Header, Segment, Form, Button} from 'semantic-ui-react';
 
-function Login({user:{username, mobileNumber, verificationCode, verificationSent}, setUser, sendSmsCode}) {
+function Login({user:{username, mobileNumber, verificationCode, verificationSent}, setUser, sendSmsCode, sendVerificationCode}) {
     function populateFilds(event, data){
         setUser((draft) => {
             draft[data.name] = data.value;
@@ -43,8 +43,8 @@ function Login({user:{username, mobileNumber, verificationCode, verificationSent
                         name='verificationCode'
                         />
                     )}
-                    <Button color="teal" fluid size="large" onClick={sendSmsCode}>
-                        Login/Signup
+                    <Button color="teal" fluid size="large" onClick={!verificationSent ? sendSmsCode : sendVerificationCode}>
+                        {!verificationSent ? 'Login/Signup' : 'Enter Your Code'}
                     </Button>
                 </Segment>
             </Form>
