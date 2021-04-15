@@ -1,15 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Login from './components/Login';
 import {useImmer} from 'use-immer';
 import axios from './utils/Axios';
+import socket from './utils/SocketIo';
 
 function App() {
+  
   const [user, setUser] = useImmer({
     username: '',
     mobileNumber: '',
     verificationCode: '',
     verificationSent: false,
   });
+
+  useEffect(() => {
+    socket.on('disconnect', () => {
+      console.log('Socket disconnected');
+    });
+    return () => {};
+  }, []);
 
   async function sendSmsCode() {
     console.log('Sending SMS');

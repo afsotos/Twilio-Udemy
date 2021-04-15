@@ -2,8 +2,19 @@ const express = require('express');
 const twilio = require('./Twilio');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-
+const http = require('http');
+const socketIo = require('socket.io');
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server); //agregado para solucion cap 18
+
+io.on('connection', (socket) => {
+  console.log('Socket connected', socket.id);
+  socket.on('disconnect', () => {
+    console.log('Socket disconnected', socket.id);
+  });
+});
+
 app.use(bodyParser.json());
 app.use(cors());
 
@@ -34,6 +45,7 @@ app.post('/verify', async(req, res) => {
 //Seccion 3 clase 6
 //console.log(process.env.MOBILE);
 
-app.listen(PORT,() => {
+server.listen(PORT,() => {
     console.log(`Listening on PORT: ${PORT}`);
+    
 });
