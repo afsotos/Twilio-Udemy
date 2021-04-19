@@ -6,7 +6,13 @@ const http = require('http');
 const socketIo = require('socket.io');
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server); //agregado para solucion cap 18
+//const io = socketIo(server); //agregado para solucion cap 18
+const io = socketIo(server, {
+  cors: {
+      origin: '*',
+      methods: ['*'],
+  },
+});
 
 io.on('connection', (socket) => {
   console.log('Socket connected', socket.id);
