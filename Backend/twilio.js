@@ -25,7 +25,7 @@ class Twilio{
             to,
             channel,
         });
-        console.log('sendVerify:',data)
+        console.log('sendVerify:');
         return data;
     }
 
@@ -34,10 +34,10 @@ class Twilio{
         .services(this.verify)
         .verificationChecks.create({
             to,
-            code
+            code,
         });
-        console.log('verifyCode',data);
-        return;
+        console.log('verifyCode');
+        return data;
     }
 }
 

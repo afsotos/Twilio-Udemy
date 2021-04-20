@@ -1,17 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Login from './components/Login';
 import {useImmer} from 'use-immer';
 import axios from './utils/Axios';
 import socket from './utils/SocketIo';
+import useLocalStorage from './hooks/useLocalStorage';
 
 function App() {
-  
   const [user, setUser] = useImmer({
     username: '',
     mobileNumber: '',
     verificationCode: '',
     verificationSent: false,
   });
+  const [storedToken, setStoredToken] = useLocalStorage('token', null);
 
   useEffect(() => {
     socket.on('disconnect', () => {
@@ -37,8 +38,10 @@ function App() {
     const response = await axios.post('/verify',{
       to: user.mobileNumber,
       code: user.verificationCode,
+      username: user.username,
     });
-    console.log('verification response', response.data);
+    console.log('received token', response.data.token);
+    setStoredToken(response.data.token);
   }
 
   return (
