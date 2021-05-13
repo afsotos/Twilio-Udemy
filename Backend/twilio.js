@@ -1,5 +1,6 @@
 const twilio = require('twilio');
 const { ModelBuildContext } = require('twilio/lib/rest/autopilot/v1/assistant/modelBuild');
+const VoiceResponse = require('twilio/lib/twiml/VoiceResponse');
 
 class Twilio{
     phoneNumber = '+1 571 200 8463';
@@ -38,6 +39,18 @@ class Twilio{
         });
         console.log('verifyCode');
         return data;
+    }
+
+    voiceResponse(message){
+        const twiml = new VoiceResponse();
+        twiml.say(
+            {
+            voice:'Polly.Lupe-Neural',
+            loop:2
+            },
+            message
+        );
+        return twiml
     }
 }
 

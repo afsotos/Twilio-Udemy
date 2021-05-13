@@ -7,7 +7,7 @@ const socketIo = require('socket.io');
 const jwt = require ('./utils/Jwt');
 const app = express();
 const server = http.createServer(app);
-//const io = socketIo(server); //agregado para solucion cap 18
+
 const io = socketIo(server, {
   cors: {
       origin: '*',
@@ -23,6 +23,7 @@ io.on('connection', (socket) => {
 });
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
 
 const PORT = 3001;
@@ -30,9 +31,6 @@ const PORT = 3001;
 app.get('/test',(req, res) => {
     res.send('Welcome to Twilio');
 });
-
-//Seccion 3 clase 6
-//Crear endpoint para recibir mobile number y verification code
 
 app.post('/login', async (req, res) => {
     console.log('loging in');
@@ -52,10 +50,19 @@ app.post('/verify', async(req, res) => {
     res.status(401).send('Invalid token');
 });
 
-//Seccion 3 clase 6
-//console.log(process.env.MOBILE);
+app.post('/call-new', (req, res) => {
+  console.log('receive a new call', req.body);
+  io.emit('call-new', {data: req.body});
+  const response = twilio.voiceResponse('Gracias por llamar.');
+  res.type('text/xml');
+  res.send(response.toString());
+});
+
+app.post('/call-status-changed', (req, res) => {
+  console.log('Call status changes');
+  res.send('ok');
+});
 
 server.listen(PORT,() => {
     console.log(`Listening on PORT: ${PORT}`);
-    
 });

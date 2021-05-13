@@ -1,11 +1,13 @@
 import NavBar from './NavBar';
 import CallProgress from './CallProgess';
 
-function CallCenter(){
+function CallCenter({ calls }){
     return (
         <div>
             <NavBar />
-            <CallProgress />
+            {calls.calls.map((call) => (
+            <CallProgress call={call} />
+            ))}
         </div>
     );
 }
