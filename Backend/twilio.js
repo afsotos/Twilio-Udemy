@@ -46,11 +46,17 @@ class Twilio{
         twiml.say(
             {
             voice:'Polly.Lupe-Neural',
-            loop:2
             },
             message
         );
-        return twiml
+        twiml.redirect('https://nascall.loca.lt/enqueue');
+        return twiml;
+    }
+
+    enqueueCall(queueName){
+        const twim = new VoiceResponse();
+        twim.enqueue(queueName);
+        return twim;
     }
 }
 

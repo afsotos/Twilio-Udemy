@@ -5,6 +5,7 @@ const cors = require('cors');
 const http = require('http');
 const socketIo = require('socket.io');
 const jwt = require ('./utils/Jwt');
+const { twiml } = require('twilio');
 const app = express();
 const server = http.createServer(app);
 
@@ -51,9 +52,9 @@ app.post('/verify', async(req, res) => {
 });
 
 app.post('/call-new', (req, res) => {
-  console.log('receive a new call', req.body);
+  console.log('receive a new call');
   io.emit('call-new', {data: req.body});
-  const response = twilio.voiceResponse('Gracias por llamar.');
+  const response = twilio.voiceResponse('Gracias por llamar. Lo pondremos en espera, hasta que un agente esté disponible.');
   res.type('text/xml');
   res.send(response.toString());
 });
@@ -61,6 +62,14 @@ app.post('/call-new', (req, res) => {
 app.post('/call-status-changed', (req, res) => {
   console.log('Call status changes');
   res.send('ok');
+});
+
+app.post('/enqueue', (req, res) => {
+  const response = twilio.enqueueCall('Customer Service');
+  console.log('Enqueuing Call');
+  io.emit('enqueue', { data: req.body });
+  res.type('text/xml');
+  res.send(response.toString());
 });
 
 server.listen(PORT,() => {
