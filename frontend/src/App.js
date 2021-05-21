@@ -5,6 +5,7 @@ import axios from './utils/Axios';
 import socket from './utils/SocketIo';
 import useLocalStorage from './hooks/useLocalStorage';
 import CallCenter from './components/CallCenter';
+import useTokenFromLocalStorage from './hooks/useTokenFromLocalStorage';
 
 function App() {
   const [calls, setCalls] =useImmer({
@@ -16,18 +17,31 @@ function App() {
     verificationCode: '',
     verificationSent: false,
   });
-  const [storedToken, setStoredToken] = useLocalStorage('token', null);
+  //const [storedToken, setStoredToken] = useLocalStorage('token', null);
+  const [storedToken, setStoredToken, isValidToken] = useTokenFromLocalStorage(null);
 
   useEffect(() => {
-    socket.on('disconnect', () => {
+    if (isValidToken) {
+      console.log('Valid token');
+      return socket.addToken(storedToken);
+    }
+    console.log('invalid token');
+    socket.removeToken();
+  }, [isValidToken, storedToken]);
+  
+  useEffect(() => {
+    socket.client.on('connect', () => {
+      console.log('Connected');
+    });
+    socket.client.on('disconnect', () => {
       console.log('Socket disconnected');
     });
-    socket.on('call-new',({data:{ CallSid, CallStatus }}) => {
+    socket.client.on('call-new',({data:{ CallSid, CallStatus }}) => {
       setCalls(draft => {
         draft.calls.push({CallSid,CallStatus});
       });
     });
-    socket.on('enqueue', ({data:{CallSid}}) => {
+    socket.client.on('enqueue', ({data:{CallSid}}) => {
       setCalls(draft => {
         const index = draft.calls.findIndex(
           ({ CallSid }) => CallSid === CallSid
@@ -36,7 +50,7 @@ function App() {
       });
     });
     return () => {};
-  }, []);
+  }, [socket.client]);
 
   async function sendSmsCode() {
     console.log('Sending SMS');
@@ -63,15 +77,18 @@ function App() {
 
   return (
   <div>
-    {storedToken ? (
+    {isValidToken ? (
       <CallCenter calls={calls} />
     ) : (
-      <Login 
-        user={user} 
-        setUser={setUser} 
-        sendSmsCode={sendSmsCode}
-        sendVerificationCode={sendVerificationCode}
-      />
+      <>
+        <CallCenter calls={calls} />
+        <Login 
+          user={user} 
+          setUser={setUser} 
+          sendSmsCode={sendSmsCode}
+          sendVerificationCode={sendVerificationCode}
+        />
+      </>
     )}
   </div>
   );
